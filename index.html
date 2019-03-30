@@ -13,13 +13,13 @@
 
 <body>
   <nav>
-      <div class="nav-wrapper">
+      <div style="background-color:#748d26;"class="nav-wrapper">
        
-        <a href="#" class="A-gen">Logo</a>
+        <a href="#" class="brand-logo">A-gen</a>
        
         <ul class="right hide-on-med-and-down">
-            <li><p id="user ">Welkom <span id="username"></span>!</p></li>
-            <li></li>
+            <li><a style="text-align:center" id="user ">Welkom <span id="username"></span>!</a></li>
+            <li><a onclick="logout()" href="#">Logout</a></li>
         </ul>
              
               
@@ -34,18 +34,30 @@
 <script>
   var fileUploadTmpl = document.querySelector('#file-uploader-template').import.getElementById('file-uploader');
   var pdfConfigTmpl = document.querySelector('#pdf-config-template').import.getElementById('pdf-config');
+  var keycloak = Keycloak();
   $( document ).ready(function() {
     document.getElementById('content').appendChild(fileUploadTmpl.content.cloneNode(true));
-    var keycloak = Keycloak();
-    // $('#username').html(keycloak.);
-    console.log(keycloak)
+    
+    keycloak.init({ onLoad: 'login-required' }).success(function(){
+      $('#username').html(keycloak.idTokenParsed['name']);
+    });
+   
+    
     $('#dender').html('dender');
+
+   
+    
   })
 
-    function nextView() {
-      var firstChild = document.getElementById('content').firstElementChild;
-      document.getElementById('content').removeChild(firstChild);
+  function logout(){
+      console.log("tets")
+      keycloak.logout();
+    }
 
-      document.getElementById('content').appendChild(pdfConfigTmpl.content.cloneNode(true));
+  function nextView() {
+    var firstChild = document.getElementById('content').firstElementChild;
+    document.getElementById('content').removeChild(firstChild);
+
+    document.getElementById('content').appendChild(pdfConfigTmpl.content.cloneNode(true));
     }
 </script>

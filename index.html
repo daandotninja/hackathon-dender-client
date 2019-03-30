@@ -5,12 +5,30 @@
     <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
     <link id="file-uploader-template" rel="import" href="app/file-uploader.html">
     <link id="pdf-config-template" rel="import" href="app/pdf-config.html">
+    <link rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.min.css">
+    <script src="node_modules/materialize-css/dist/js/materialize.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 
 <body>
-<div id="content"></div>
-<button id="back">Vorige</button>
-<button id="next" onclick="nextView()">Volgende</button>
+  <nav>
+      <div style="background-color:#748d26;"class="nav-wrapper">
+
+        <a href="#" class="brand-logo">A-gen</a>
+
+        <ul class="right hide-on-med-and-down">
+            <li><a style="text-align:center" id="user ">Welkom <span id="username"></span>!</a></li>
+            <li><a onclick="logout()" href="#">Logout</a></li>
+        </ul>
+
+
+
+      </div>
+    </nav>
+  <div id="content"></div>
+  <button id="back">Vorige</button>
+  <button id="next" onclick="nextView()">Volgende</button>
 </body>
 
 <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
@@ -18,18 +36,25 @@
 <script>
   var fileUploadTmpl = document.querySelector('#file-uploader-template').import.getElementById('file-uploader');
   var pdfConfigTmpl = document.querySelector('#pdf-config-template').import.getElementById('pdf-config');
+  var keycloak = Keycloak();
   $( document ).ready(function() {
     initializeFirebase();
     document.getElementById('content').appendChild(fileUploadTmpl.content.cloneNode(true));
     document.querySelector("#myfiles").onchange=pullfiles;
-    var keycloak = Keycloak();
-    keycloak.init({ onLoad: 'login-required' });
+    keycloak.init({ onLoad: 'login-required' }).success(function(){
+      $('#username').html(keycloak.idTokenParsed['name']);
+    });
   })
 
-    function nextView() {
-      var firstChild = document.getElementById('content').firstElementChild;
-      document.getElementById('content').removeChild(firstChild);
+  function logout(){
+      console.log("tets")
+      keycloak.logout();
+    }
 
-      document.getElementById('content').appendChild(pdfConfigTmpl.content.cloneNode(true));
+  function nextView() {
+    var firstChild = document.getElementById('content').firstElementChild;
+    document.getElementById('content').removeChild(firstChild);
+
+    document.getElementById('content').appendChild(pdfConfigTmpl.content.cloneNode(true));
     }
 </script>

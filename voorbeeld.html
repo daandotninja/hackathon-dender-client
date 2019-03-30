@@ -1,0 +1,82 @@
+
+<head>
+    <script src="node_modules/keycloak-js/dist/keycloak.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
+    <link id="pdf-config-template" rel="import" href="app/pdf-config.html">
+    <link rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.min.css">
+    <script src="node_modules/materialize-css/dist/js/materialize.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <style id="compiled-css" type="text/css">
+        #the-canvas {
+            border:1px solid black;
+        }
+    </style>
+
+
+    <script type="text/javascript">
+
+
+      window.onload=function(){
+
+// If absolute URL from the remote server is provided, configure the CORS
+// header on that server.
+        const  url = 'https://firebasestorage.googleapis.com/v0/b/hackathon-dender-db.appspot.com/o/cm.pdf?alt=media&token=054d73d1-9776-46bc-a90b-56637ab40256';
+
+// Loaded via <script> tag, create shortcut to access PDF.js exports.
+        const  pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+// The workerSrc property shall be specified.
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+// Asynchronous download of PDF
+        const  loadingTask = pdfjsLib.getDocument(url);
+        loadingTask.promise.then(function(pdf) {
+          console.log('PDF loaded');
+
+          // Fetch the first page
+          const  pageNumber = 1;
+          pdf.getPage(pageNumber).then(function(page) {
+            console.log('Page loaded');
+
+            const  scale = 1.5;
+            const  viewport = page.getViewport({scale: scale});
+
+            // Prepare canvas using PDF page dimensions
+            const  canvas = document.getElementById('the-canvas');
+            const  context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            // Render PDF page into canvas context
+            const  renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
+            const  renderTask = page.render(renderContext);
+            renderTask.promise.then(function () {
+              console.log('Page rendered');
+            });
+          });
+        }, function (reason) {
+          // PDF loading error
+          console.error(reason);
+        });
+
+      }
+
+    </script>
+
+</head>
+
+<body>
+<script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+
+<h1>PDF.js 'Hello, world!' example</h1>
+
+<canvas id="the-canvas"></canvas>
+
+
+</body>

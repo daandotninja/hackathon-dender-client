@@ -11,10 +11,10 @@
 <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
 
 <script>
-  var addListItem=function(doc) {
+  var addListItem=function(name, doc) {
     var li = document.createElement('li');
     var btn = document.createElement('button');
-    btn.textContent = doc.data().path;
+    btn.textContent = name;
     btn.onclick = function() {
       nextView();
     }
@@ -36,10 +36,11 @@
       var fileRef = storageRef.child(file.name);
       fileRef.put(file).then(function() {
         fileRef.getDownloadURL().then(function(urlpath) {
-          firebase.firestore().collection('documents').doc(Date.now()).set({
+          firebase.firestore().collection('documents').doc(''+Date.now()).set({
             path: urlpath,
-            name: i
+            name: file.name
           });
+          addListItem(file.name, file);
         });
       });
       i++;

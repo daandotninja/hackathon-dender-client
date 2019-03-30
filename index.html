@@ -44,6 +44,13 @@
     keycloak.init({ onLoad: 'login-required' }).success(function(){
       $('#username').html(keycloak.idTokenParsed['name']);
     });
+    firebase.firestore().collection('documents').get().then(function(querySnapshot) {
+      querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        addListItem(doc);
+        // console.log(doc.id, " => ", doc.data());
+      });
+    })
   })
 
   function logout(){
@@ -54,7 +61,6 @@
   function nextView() {
     var firstChild = document.getElementById('content').firstElementChild;
     document.getElementById('content').removeChild(firstChild);
-
     document.getElementById('content').appendChild(pdfConfigTmpl.content.cloneNode(true));
     }
 </script>

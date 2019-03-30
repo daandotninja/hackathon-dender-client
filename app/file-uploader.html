@@ -3,12 +3,24 @@
     <div>
         <div>Bestanden:</div>
         <input id="myfiles" type="file" name="files" multiple="multiple">
+        <ul id="listitems">
+        </ul>
 
     </div>
 </template>
 <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
 
 <script>
+  var addListItem=function(doc) {
+    var li = document.createElement('li');
+    var btn = document.createElement('button');
+    btn.textContent = doc.data().path;
+    btn.onclick = function() {
+      nextView();
+    }
+    li.appendChild(btn);
+    document.getElementById('listitems').appendChild(li);
+  }
 
   var pullfiles=function(){
     var fileInput = document.querySelector("#myfiles");
@@ -17,16 +29,17 @@
     var fl = files.length;
     var i = 0;
     var storageRef = firebase.storage().ref();
-    var fileRef = storageRef.child(file.name);
-    var pathReference = storage.ref('images/stars.jpg');
 
     while ( i < fl) {
       // localize file var in the loop
       var file = files[i];
+      var fileRef = storageRef.child(file.name);
       fileRef.put(file).then(function() {
-        storageRef
-        firebase.database().ref('path').once('value').then(function(snapshot) {
-          window.alert(snapshot);
+        fileRef.getDownloadURL().then(function(urlpath) {
+          firebase.firestore().collection('documents').doc(Date.now()).set({
+            path: urlpath,
+            name: i
+          });
         });
       });
       i++;

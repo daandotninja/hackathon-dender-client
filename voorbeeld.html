@@ -1,4 +1,3 @@
-
 <head>
     <script src="node_modules/keycloak-js/dist/keycloak.min.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -6,58 +5,361 @@
     <link id="pdf-config-template" rel="import" href="app/pdf-config.html">
     <link rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.min.css">
     <script src="node_modules/materialize-css/dist/js/materialize.min.js"></script>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 
     <style id="compiled-css" type="text/css">
         #the-canvas {
-            border:1px solid black;
+            border: 1px solid black;
+        }
+
+        #canvas-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #fields {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .textfield {
+            position: absolute;
+        }
+
+        #paging {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #current {
+            margin-left: 20px;
         }
     </style>
 
-
     <script type="text/javascript">
 
+      const fieldTypes = {
+        FREE_TEXT: 'FREE_TEXT',
+        IMAGE: 'IMAGE',
+        GA_FIELD: 'GA_FIELD',
+      };
 
-      window.onload=function(){
+      const dummyLedenlijst = {
+        'links': [{
+          'rel': 'self',
+          'href': 'https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst?offset=0&aantal=6',
+          'method': 'GET',
+          'secties': [],
+        }, {
+          'rel': 'filter',
+          'href': 'https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/ledenlijst/filter/huidige',
+          'method': 'GET',
+          'secties': [],
+        }],
+        'leden': [{
+          'links': [{
+            'rel': 'lid',
+            'href': 'https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/d5f75b372444ddf701244f6edcf3205a?positie=0',
+            'method': 'GET',
+            'secties': [],
+          }],
+          'id': 'd5f75b372444ddf701244f6edcf3205a',
+          'waarden': {
+            'be.vvksm.groepsadmin.model.column.VVKSMTakkenColumn': 'Verkenners',
+            'be.vvksm.groepsadmin.model.column.EmailColumn': 'dimitri@rombaut.net',
+            'be.vvksm.groepsadmin.model.column.BusColumn': 'A',
+            'be.vvksm.groepsadmin.model.column.VoornaamColumn': 'Dries',
+            'be.vvksm.groepsadmin.model.column.GemeenteColumn': 'Aalst',
+            'be.vvksm.groepsadmin.model.column.GsmColumn': '0478/255624',
+            'be.vvksm.groepsadmin.model.column.GeboorteDatumColumn': '01/08/2003',
+            'be.vvksm.groepsadmin.model.column.StraatnaamColumn': 'Nieuwbeekstraat',
+            'be.vvksm.groepsadmin.model.column.AchternaamColumn': 'Rombaut',
+            'd5f75e2339b51fa00139bbd5f9a15a7e': '',
+            'be.vvksm.groepsadmin.model.column.PostcodeColumn': '9300',
+            'be.vvksm.groepsadmin.model.column.TelefoonColumn': '053/410174',
+            'be.vvksm.groepsadmin.model.column.StraatnummerColumn': '45',
+          },
+          'positie': 0,
+        }, {
+          'links': [{
+            'rel': 'lid',
+            'href': 'https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/d5f75b37258c728701263914e4390bce?positie=1',
+            'method': 'GET',
+            'secties': [],
+          }],
+          'id': 'd5f75b37258c728701263914e4390bce',
+          'waarden': {
+            'be.vvksm.groepsadmin.model.column.VVKSMTakkenColumn': 'Gidsen',
+            'be.vvksm.groepsadmin.model.column.EmailColumn': 'tom.katrien@telenet.be',
+            'be.vvksm.groepsadmin.model.column.BusColumn': 'D',
+            'be.vvksm.groepsadmin.model.column.VoornaamColumn': 'Emma',
+            'be.vvksm.groepsadmin.model.column.GemeenteColumn': 'Nieuwerkerken (Aalst)',
+            'be.vvksm.groepsadmin.model.column.GsmColumn': '0478/38.45.20',
+            'be.vvksm.groepsadmin.model.column.GeboorteDatumColumn': '03/09/2003',
+            'be.vvksm.groepsadmin.model.column.StraatnaamColumn': 'Kwalestraat',
+            'be.vvksm.groepsadmin.model.column.AchternaamColumn': 'Van Pelt',
+            'd5f75e2339b51fa00139bbd5f9a15a7e': '',
+            'be.vvksm.groepsadmin.model.column.PostcodeColumn': '9320',
+            'be.vvksm.groepsadmin.model.column.TelefoonColumn': '',
+            'be.vvksm.groepsadmin.model.column.StraatnummerColumn': '113',
+          },
+          'positie': 1,
+        }, {
+          'links': [{
+            'rel': 'lid',
+            'href': 'https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/d5f75b331c9f05e1011cb4dbaf9d4768?positie=2',
+            'method': 'GET',
+            'secties': [],
+          }],
+          'id': 'd5f75b331c9f05e1011cb4dbaf9d4768',
+          'waarden': {
+            'be.vvksm.groepsadmin.model.column.VVKSMTakkenColumn': 'Gidsen',
+            'be.vvksm.groepsadmin.model.column.EmailColumn': 'fien.van.poelvoorde@proximus.be',
+            'be.vvksm.groepsadmin.model.column.BusColumn': '',
+            'be.vvksm.groepsadmin.model.column.VoornaamColumn': 'Fien',
+            'be.vvksm.groepsadmin.model.column.GemeenteColumn': 'Aalst',
+            'be.vvksm.groepsadmin.model.column.GsmColumn': '+32470955228',
+            'be.vvksm.groepsadmin.model.column.GeboorteDatumColumn': '13/08/2002',
+            'be.vvksm.groepsadmin.model.column.StraatnaamColumn': 'Leo De Béthunelaan',
+            'be.vvksm.groepsadmin.model.column.AchternaamColumn': 'Van Poelvoorde',
+            'd5f75e2339b51fa00139bbd5f9a15a7e': '',
+            'be.vvksm.groepsadmin.model.column.PostcodeColumn': '9300',
+            'be.vvksm.groepsadmin.model.column.TelefoonColumn': '+32470955228',
+            'be.vvksm.groepsadmin.model.column.StraatnummerColumn': '41',
+          },
+          'positie': 2,
+        }, {
+          'links': [{
+            'rel': 'lid',
+            'href': 'https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/d5f75e232b43c556012b4f0698126354?positie=3',
+            'method': 'GET',
+            'secties': [],
+          }],
+          'id': 'd5f75e232b43c556012b4f0698126354',
+          'waarden': {
+            'be.vvksm.groepsadmin.model.column.VVKSMTakkenColumn': 'Verkenners',
+            'be.vvksm.groepsadmin.model.column.EmailColumn': 'FABIENNE.HUTSEBAUT@telenet.BE',
+            'be.vvksm.groepsadmin.model.column.BusColumn': '',
+            'be.vvksm.groepsadmin.model.column.VoornaamColumn': 'Frederik',
+            'be.vvksm.groepsadmin.model.column.GemeenteColumn': 'Nieuwerkerken (Aalst)',
+            'be.vvksm.groepsadmin.model.column.GsmColumn': '0472/525374',
+            'be.vvksm.groepsadmin.model.column.GeboorteDatumColumn': '18/09/2002',
+            'be.vvksm.groepsadmin.model.column.StraatnaamColumn': 'Bergstraat',
+            'be.vvksm.groepsadmin.model.column.AchternaamColumn': 'Van Steenberge',
+            'd5f75e2339b51fa00139bbd5f9a15a7e': 'Streepmuis',
+            'be.vvksm.groepsadmin.model.column.PostcodeColumn': '9320',
+            'be.vvksm.groepsadmin.model.column.TelefoonColumn': '053/708934',
+            'be.vvksm.groepsadmin.model.column.StraatnummerColumn': '56',
+          },
+          'positie': 3,
+        }, {
+          'links': [{
+            'rel': 'lid',
+            'href': 'https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/d5f75e2332d447860132e9807f4d11c6?positie=4',
+            'method': 'GET',
+            'secties': [],
+          }],
+          'id': 'd5f75e2332d447860132e9807f4d11c6',
+          'waarden': {
+            'be.vvksm.groepsadmin.model.column.VVKSMTakkenColumn': 'Verkenners',
+            'be.vvksm.groepsadmin.model.column.EmailColumn': 'fabienne.hutsebaut@telenet.be',
+            'be.vvksm.groepsadmin.model.column.BusColumn': '',
+            'be.vvksm.groepsadmin.model.column.VoornaamColumn': 'Matthias',
+            'be.vvksm.groepsadmin.model.column.GemeenteColumn': 'Nieuwerkerken (Aalst)',
+            'be.vvksm.groepsadmin.model.column.GsmColumn': '0472/525374',
+            'be.vvksm.groepsadmin.model.column.GeboorteDatumColumn': '27/08/2004',
+            'be.vvksm.groepsadmin.model.column.StraatnaamColumn': 'Bergstraat',
+            'be.vvksm.groepsadmin.model.column.AchternaamColumn': 'Van Steenberge',
+            'd5f75e2339b51fa00139bbd5f9a15a7e': '',
+            'be.vvksm.groepsadmin.model.column.PostcodeColumn': '9320',
+            'be.vvksm.groepsadmin.model.column.TelefoonColumn': '053/708934',
+            'be.vvksm.groepsadmin.model.column.StraatnummerColumn': '56',
+          },
+          'positie': 4,
+        }, {
+          'links': [{
+            'rel': 'lid',
+            'href': 'https://groepsadmin.scoutsengidsenvlaanderen.be/groepsadmin/rest-ga/lid/d5f75e2342f8037301432072bc022171?positie=5',
+            'method': 'GET',
+            'secties': [],
+          }],
+          'id': 'd5f75e2342f8037301432072bc022171',
+          'waarden': {
+            'be.vvksm.groepsadmin.model.column.VVKSMTakkenColumn': 'Verkenners',
+            'be.vvksm.groepsadmin.model.column.EmailColumn': 'Hilde.vankeer@ugent.be',
+            'be.vvksm.groepsadmin.model.column.BusColumn': '',
+            'be.vvksm.groepsadmin.model.column.VoornaamColumn': 'Viktor',
+            'be.vvksm.groepsadmin.model.column.GemeenteColumn': 'Aalst',
+            'be.vvksm.groepsadmin.model.column.GsmColumn': '0474378782',
+            'be.vvksm.groepsadmin.model.column.GeboorteDatumColumn': '18/12/2002',
+            'be.vvksm.groepsadmin.model.column.StraatnaamColumn': 'Valerius De Saedeleerstraat',
+            'be.vvksm.groepsadmin.model.column.AchternaamColumn': 'Van der Mensbrugghe',
+            'd5f75e2339b51fa00139bbd5f9a15a7e': '',
+            'be.vvksm.groepsadmin.model.column.PostcodeColumn': '9300',
+            'be.vvksm.groepsadmin.model.column.TelefoonColumn': '',
+            'be.vvksm.groepsadmin.model.column.StraatnummerColumn': '13',
+          },
+          'positie': 5,
+        }],
+        'aantal': 6,
+        'offset': 0,
+        'totaal': 6,
+      };
 
-// If absolute URL from the remote server is provided, configure the CORS
-// header on that server.
-        const  url = 'https://firebasestorage.googleapis.com/v0/b/hackathon-dender-db.appspot.com/o/cm.pdf?alt=media&token=054d73d1-9776-46bc-a90b-56637ab40256';
+      const dummyDoc = {
+        name: 'Demo file',
+        path: 'https://firebasestorage.googleapis.com/v0/b/hackathon-dender-db.appspot.com/o/cm.pdf?alt=media&token=054d73d1-9776-46bc-a90b-56637ab40256',
+        fields: [
+          {
+            x: .45,
+            y: .248,
+            type: fieldTypes.GA_FIELD,
+            ga_property: 'be.vvksm.groepsadmin.model.column.EmailColumn',
+          },
+          {
+            x: .18,
+            y: .185,
+            type: fieldTypes.GA_FIELD,
+            ga_property: 'be.vvksm.groepsadmin.model.column.VoornaamColumn',
+          },
+          {
+            y: .227,
+            x: .35,
+            type: fieldTypes.GA_FIELD,
+            ga_property: 'be.vvksm.groepsadmin.model.column.GemeenteColumn',
+          },
+          {
+            x: .16,
+            y: .248,
+            type: fieldTypes.GA_FIELD,
+            ga_property: 'be.vvksm.groepsadmin.model.column.GsmColumn',
+          },
+          {
+            x: .18,
+            y: .205,
+            type: fieldTypes.GA_FIELD,
+            ga_property: 'be.vvksm.groepsadmin.model.column.StraatnaamColumn',
+          },
+          {
+            y: .185,
+            x: .61,
+            type: fieldTypes.GA_FIELD,
+            ga_property: 'be.vvksm.groepsadmin.model.column.AchternaamColumn',
+          },
+          {
+            y: .225,
+            x: .19,
+            type: fieldTypes.GA_FIELD,
+            ga_property: 'be.vvksm.groepsadmin.model.column.PostcodeColumn',
+          },
+          {
+            x: .3,
+            y: .7,
+            type: fieldTypes.GA_FIELD,
+            ga_property: 'be.vvksm.groepsadmin.model.column.TelefoonColumn',
+          },
+          {
+            x: .5,
+            y: .8,
+            type: fieldTypes.GA_FIELD,
+            ga_property: 'be.vvksm.groepsadmin.model.column.StraatnummerColumn',
+          },
+          {
+            y: .325,
+            x: .35,
+            type: fieldTypes.FREE_TEXT,
+            value: 'Scouts en Gidsen Ashkan',
+          },
+          {
+            y: .347,
+            x: .33,
+            type: fieldTypes.FREE_TEXT,
+            value: '+32473725140',
+          },
+        ],
+      };
+
+      let currentIndex = 0;
+
+      const loadLid = (index) => {
+
+        const lid = dummyLedenlijst.leden[index];
+
+        dummyDoc.fields.filter(f => f.type === fieldTypes.GA_FIELD).forEach(f => {
+          const span = document.getElementById(f.x + '-' + f.y);
+
+          span.innerHTML = lid.waarden[f.ga_property];
+        });
+
+        currentIndex = index;
+        document.getElementById('currentIndex').innerHTML = index + 1;
+        document.getElementById('current').innerHTML = lid.waarden['be.vvksm.groepsadmin.model.column.VoornaamColumn'] + ' ' + lid.waarden['be.vvksm.groepsadmin.model.column.AchternaamColumn'];
+      };
+
+      const initFields = () => {
+        const container = document.getElementById('fields');
+
+        dummyDoc.fields.forEach(f => {
+          const span = document.createElement('span');
+          span.id = f.x + '-' + f.y;
+          span.classList.add('textfield');
+          span.style.top = (f.y * 100) + '%';
+          span.style.left = (f.x * 100) + '%';
+
+          if (f.type === fieldTypes.FREE_TEXT) {
+            span.innerHTML = f.value;
+          }
+
+          container.appendChild(span);
+        });
+      };
+
+      const onOpenModal = () => {
 
 // Loaded via <script> tag, create shortcut to access PDF.js exports.
-        const  pdfjsLib = window['pdfjs-dist/build/pdf'];
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
 
 // The workerSrc property shall be specified.
         pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
 
 // Asynchronous download of PDF
-        const  loadingTask = pdfjsLib.getDocument(url);
-        loadingTask.promise.then(function(pdf) {
+        const loadingTask = pdfjsLib.getDocument(dummyDoc.path);
+        loadingTask.promise.then(function (pdf) {
           console.log('PDF loaded');
 
           // Fetch the first page
-          const  pageNumber = 1;
-          pdf.getPage(pageNumber).then(function(page) {
+          const pageNumber = 1;
+          pdf.getPage(pageNumber).then(function (page) {
             console.log('Page loaded');
 
-            const  scale = 1.5;
-            const  viewport = page.getViewport({scale: scale});
+            const scale = 1.5;
+            const viewport = page.getViewport({scale: scale});
 
             // Prepare canvas using PDF page dimensions
-            const  canvas = document.getElementById('the-canvas');
-            const  context = canvas.getContext('2d');
+            const canvas = document.getElementById('the-canvas');
+            const context = canvas.getContext('2d');
             canvas.height = viewport.height;
             canvas.width = viewport.width;
+            canvas.style.width = '100%';
 
             // Render PDF page into canvas context
-            const  renderContext = {
+            const renderContext = {
               canvasContext: context,
-              viewport: viewport
+              viewport: viewport,
             };
-            const  renderTask = page.render(renderContext);
+            const renderTask = page.render(renderContext);
             renderTask.promise.then(function () {
               console.log('Page rendered');
+
+              initFields(canvas);
+              loadLid(currentIndex);
+
+              document.getElementById('total').innerHTML = dummyLedenlijst.aantal;
+
             });
           });
         }, function (reason) {
@@ -65,7 +367,27 @@
           console.error(reason);
         });
 
-      }
+        const left = document.getElementById('left');
+        const right = document.getElementById('right');
+
+        left.addEventListener('click', () => {
+          loadLid(currentIndex > 0 ? currentIndex - 1 : 0);
+        });
+
+        right.addEventListener('click', () => {
+          loadLid(currentIndex < dummyLedenlijst.leden.length - 1 ? currentIndex + 1 : dummyLedenlijst.leden.length - 1);
+        });
+
+      };
+
+      $(document).ready(function(){
+        const modal = $('#voorbeeld');
+        modal.modal({
+          onOpenEnd: onOpenModal
+        });
+        modal.modal('open');
+      });
+
 
     </script>
 
@@ -74,9 +396,35 @@
 <body>
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 
-<h1>PDF.js 'Hello, world!' example</h1>
+<!-- Modal Trigger -->
+<a class="waves-effect waves-light btn modal-trigger" href="#voorbeeld">Modal</a>
 
-<canvas id="the-canvas"></canvas>
+<!-- Modal Structure -->
+<div id="voorbeeld" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between">
+            <h4>Voorbeeld</h4>
+            <a class="waves-effect waves-light btn"><i class="material-icons left">email</i> Verzenden</a>
+        </div>
 
+        <p id="paging">
+
+            <a class="waves-effect waves-light btn" id="left"><i class="material-icons">keyboard_arrow_left</i></a>
+            <span>
+                <span id="currentIndex"></span> / <span id="total"></span>
+                <span id="current"></span>
+            </span>
+            <a class="waves-effect waves-light btn" id="right"><i class="material-icons">keyboard_arrow_right</i></a>
+        </p>
+
+        <div id="canvas-container">
+            <div id="fields"></div>
+            <canvas id="the-canvas"></canvas>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Annuleren</a>
+    </div>
+</div>
 
 </body>

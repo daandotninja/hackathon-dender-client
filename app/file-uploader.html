@@ -16,7 +16,7 @@
     var btn = document.createElement('button');
     btn.textContent = name;
     btn.onclick = function() {
-      nextView();
+      nextView(doc);
     }
     li.appendChild(btn);
     document.getElementById('listitems').appendChild(li);

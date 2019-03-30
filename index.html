@@ -35,7 +35,8 @@
 <script src="app/firebaseconfig.js"></script>
 
 <script>
-  var fileUploadTmpl = document.querySelector('#file-uploader-template').import.getElementById('file-uploader');
+  let  url = 'https://firebasestorage.googleapis.com/v0/b/hackathon-dender-db.appspot.com/o/cm.pdf?alt=media&token=054d73d1-9776-46bc-a90b-56637ab40256';
+var fileUploadTmpl = document.querySelector('#file-uploader-template').import.getElementById('file-uploader');
   var pdfConfigTmpl = document.querySelector('#pdf-config-template').import.getElementById('pdf-config');
   var keycloak = Keycloak();
   $( document ).ready(function() {
@@ -58,9 +59,10 @@
       keycloak.logout();
     }
 
-  function nextView() {
+  function nextView(doc) {
     var firstChild = document.getElementById('content').firstElementChild;
     document.getElementById('content').removeChild(firstChild);
     document.getElementById('content').appendChild(pdfConfigTmpl.content.cloneNode(true));
+    url = doc.data().path;
     }
 </script>

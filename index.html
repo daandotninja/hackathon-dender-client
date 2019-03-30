@@ -5,12 +5,30 @@
     <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
     <link id="file-uploader-template" rel="import" href="app/file-uploader.html">
     <link id="pdf-config-template" rel="import" href="app/pdf-config.html">
+    <link rel="stylesheet" href="node_modules/materialize-css/dist/css/materialize.min.css">
+    <script src="node_modules/materialize-css/dist/js/materialize.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 
 <body>
-<div id="content"></div>
-<button id="back">Vorige</button>
-<button id="next" onclick="nextView()">Volgende</button>
+  <nav>
+      <div class="nav-wrapper">
+       
+        <a href="#" class="A-gen">Logo</a>
+       
+        <ul class="right hide-on-med-and-down">
+            <li><p id="user ">Welkom <span id="username"></span>!</p></li>
+            <li></li>
+        </ul>
+             
+              
+           
+      </div>
+    </nav>
+  <div id="content"></div>
+  <button id="back">Vorige</button>
+  <button id="next" onclick="nextView()">Volgende</button>
 </body>
 
 <script>
@@ -19,7 +37,8 @@
   $( document ).ready(function() {
     document.getElementById('content').appendChild(fileUploadTmpl.content.cloneNode(true));
     var keycloak = Keycloak();
-    keycloak.init({ onLoad: 'login-required' })
+    // $('#username').html(keycloak.);
+    console.log(keycloak)
     $('#dender').html('dender');
   })
 

@@ -13,14 +13,17 @@
 <button id="next" onclick="nextView()">Volgende</button>
 </body>
 
+<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
+<script src="app/firebaseconfig.js"></script>
 <script>
   var fileUploadTmpl = document.querySelector('#file-uploader-template').import.getElementById('file-uploader');
   var pdfConfigTmpl = document.querySelector('#pdf-config-template').import.getElementById('pdf-config');
   $( document ).ready(function() {
+    initializeFirebase();
     document.getElementById('content').appendChild(fileUploadTmpl.content.cloneNode(true));
+    document.querySelector("#myfiles").onchange=pullfiles;
     var keycloak = Keycloak();
-    keycloak.init({ onLoad: 'login-required' })
-    $('#dender').html('dender');
+    keycloak.init({ onLoad: 'login-required' });
   })
 
     function nextView() {

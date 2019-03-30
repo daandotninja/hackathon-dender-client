@@ -1,23 +1,114 @@
 <template id="pdf-config">
-    <div id="filters">
+    <style id="compiled-css" type="text/css">
+        #the-canvas {
+            border:1px solid black;
+        }
+        #draggable{
+            padding: 10px;
+        }
+    </style>
+    <style>
+        .float-l{
+            float: left;
+        }
+    </style>
+    <!-- <div id="filters">
         <div>Leeftijd:</div>
         <select>
             <option value="older">Ouder dan</option>
             <option value="younger">Jonger dan</option>
         </select>
         <input type="number">
-    </div>
-
+    </div> -->
+    <a class="waves-effect waves-light btn-large" href="../voorbeeld.html">Preview</a>
     <div id="dragdrop">
-        <div id="pdf">
-
+        <div id="pdf" class="float-l">
+            <canvas id="the-canvas"></canvas>
         </div>
 
-        <div id="fields">
-
+        <div id="fields" class="float-l">
+            <div id="draggable" class="">
+                <p>Voornaam</p>
+            </div>
+            <div id="draggable" class="">
+                <p>Achternaam</p>
+            </div>
+            <div id="draggable" class="">
+                    <p>Leeftijd</p>
+                </div>
+                <div id="draggable" class="">
+                <p>Achternaam</p>
+            </div>
+            
         </div>
     </div>
+
+    <script>
+       
+      
+        $( "#draggable" ).draggable({drag: function() {
+          
+        var offset = $(this).offset();
+        var xPos = offset.left;
+        var yPos = offset.top;
+        console.log(xPos)
+        
+        }});
+    </script>
+
+    <script src="//mozilla.github.io/pdf.js/build/pdf.js" onload="pdf()"></script>
+   
+    <script type="text/javascript">
+
+        function pdf() {
+
+        // If absolute URL from the remote server is provided, configure the CORS
+        // header on that server.
+        const  url = 'https://firebasestorage.googleapis.com/v0/b/hackathon-dender-db.appspot.com/o/cm.pdf?alt=media&token=054d73d1-9776-46bc-a90b-56637ab40256';
+    
+    // Loaded via <script> tag, create shortcut to access PDF.js exports.
+        const  pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+    // The workerSrc property shall be specified.
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+    // Asynchronous download of PDF
+        const  loadingTask = pdfjsLib.getDocument(url);
+        loadingTask.promise.then(function(pdf) {
+            console.log('PDF loaded');
+
+            // Fetch the first page
+            const  pageNumber = 1;
+            pdf.getPage(pageNumber).then(function(page) {
+            console.log('Page loaded');
+
+            const  scale = 1.5;
+            const  viewport = page.getViewport({scale: scale});
+
+            // Prepare canvas using PDF page dimensions
+            const  canvas = document.getElementById('the-canvas');
+            const  context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            // Render PDF page into canvas context
+            const  renderContext = {
+                canvasContext: context,
+                viewport: viewport
+            };
+            const  renderTask = page.render(renderContext);
+            renderTask.promise.then(function () {
+                console.log('Page rendered');
+            });
+            });
+        }, function (reason) {
+            // PDF loading error
+            console.error(reason);
+        });
+        }       
+
+    
+    
+      </script>
 </template>
 
-<script>
-</script>

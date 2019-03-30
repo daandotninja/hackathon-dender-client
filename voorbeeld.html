@@ -381,9 +381,11 @@
       };
 
       $(document).ready(function(){
-        $('#voorbeeld').modal({
+        const modal = $('#voorbeeld');
+        modal.modal({
           onOpenEnd: onOpenModal
         });
+        modal.modal('open');
       });
 
 

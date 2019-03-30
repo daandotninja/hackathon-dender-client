@@ -1,11 +1,32 @@
-<script src="node_modules/keycloak-js/dist/keycloak.min.js"></script>
-<script src="node_modules/jquery/dist/jquery.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
-<div id="dender">test</div>
+
+<head>
+    <script src="node_modules/keycloak-js/dist/keycloak.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
+    <link id="file-uploader-template" rel="import" href="app/file-uploader.html">
+    <link id="pdf-config-template" rel="import" href="app/pdf-config.html">
+</head>
+
+<body>
+<div id="content"></div>
+<button id="back">Vorige</button>
+<button id="next" onclick="nextView()">Volgende</button>
+</body>
+
 <script>
+  var fileUploadTmpl = document.querySelector('#file-uploader-template').import.getElementById('file-uploader');
+  var pdfConfigTmpl = document.querySelector('#pdf-config-template').import.getElementById('pdf-config');
   $( document ).ready(function() {
+    document.getElementById('content').appendChild(fileUploadTmpl.content.cloneNode(true));
     var keycloak = Keycloak();
     keycloak.init({ onLoad: 'login-required' })
     $('#dender').html('dender');
   })
+
+    function nextView() {
+      var firstChild = document.getElementById('content').firstElementChild;
+      document.getElementById('content').removeChild(firstChild);
+
+      document.getElementById('content').appendChild(pdfConfigTmpl.content.cloneNode(true));
+    }
 </script>

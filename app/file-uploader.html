@@ -2,13 +2,34 @@
 <template id="file-uploader">
     <div>
         <div>Bestanden:</div>
-        <input type="file" name="files" multiple="multiple">
+        <input id="myfiles" type="file" name="files" multiple="multiple">
 
     </div>
 </template>
+<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
 
 <script>
-  $('input[name="files"]').fileuploader({
-    // Options will go here
-  });
+
+  var pullfiles=function(){
+    var fileInput = document.querySelector("#myfiles");
+    var files = fileInput.files;
+
+    var fl = files.length;
+    var i = 0;
+    var storageRef = firebase.storage().ref();
+    var fileRef = storageRef.child(file.name);
+    var pathReference = storage.ref('images/stars.jpg');
+
+    while ( i < fl) {
+      // localize file var in the loop
+      var file = files[i];
+      fileRef.put(file).then(function() {
+        storageRef
+        firebase.database().ref('path').once('value').then(function(snapshot) {
+          window.alert(snapshot);
+        });
+      });
+      i++;
+    }
+  };
 </script>

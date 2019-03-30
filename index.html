@@ -12,16 +12,16 @@
 <body>
   <nav>
       <div style="background-color:#748d26;"class="nav-wrapper">
-       
+
         <a href="#" class="brand-logo">A-gen</a>
-       
+
         <ul class="right hide-on-med-and-down">
             <li><a style="text-align:center" id="user ">Welkom <span id="username"></span>!</a></li>
             <li><a onclick="logout()" href="#">Logout</a></li>
         </ul>
-             
-              
-           
+
+
+
       </div>
     </nav>
   <div id="content"></div>
@@ -29,22 +29,19 @@
   <button id="next" onclick="nextView()">Volgende</button>
 </body>
 
+<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase.js"></script>
+<script src="app/firebaseconfig.js"></script>
 <script>
   var fileUploadTmpl = document.querySelector('#file-uploader-template').import.getElementById('file-uploader');
   var pdfConfigTmpl = document.querySelector('#pdf-config-template').import.getElementById('pdf-config');
   var keycloak = Keycloak();
   $( document ).ready(function() {
+    initializeFirebase();
     document.getElementById('content').appendChild(fileUploadTmpl.content.cloneNode(true));
-    
+    document.querySelector("#myfiles").onchange=pullfiles;
     keycloak.init({ onLoad: 'login-required' }).success(function(){
       $('#username').html(keycloak.idTokenParsed['name']);
     });
-   
-    
-    $('#dender').html('dender');
-
-   
-    
   })
 
   function logout(){

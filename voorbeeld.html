@@ -215,62 +215,44 @@
         path: 'https://firebasestorage.googleapis.com/v0/b/hackathon-dender-db.appspot.com/o/cm.pdf?alt=media&token=054d73d1-9776-46bc-a90b-56637ab40256',
         fields: [
           {
-            x: .1,
-            y: .2,
-            type: fieldTypes.GA_FIELD,
-            ga_property: 'be.vvksm.groepsadmin.model.column.VVKSMTakkenColumn',
-          },
-          {
-            x: .2,
-            y: .3,
+            x: .45,
+            y: .248,
             type: fieldTypes.GA_FIELD,
             ga_property: 'be.vvksm.groepsadmin.model.column.EmailColumn',
           },
           {
-            x: .3,
-            y: .4,
-            type: fieldTypes.GA_FIELD,
-            ga_property: 'be.vvksm.groepsadmin.model.column.BusColumn',
-          },
-          {
-            x: .4,
-            y: .5,
+            x: .18,
+            y: .185,
             type: fieldTypes.GA_FIELD,
             ga_property: 'be.vvksm.groepsadmin.model.column.VoornaamColumn',
           },
           {
-            x: .5,
-            y: .6,
+            y: .227,
+            x: .35,
             type: fieldTypes.GA_FIELD,
             ga_property: 'be.vvksm.groepsadmin.model.column.GemeenteColumn',
           },
           {
-            x: .6,
-            y: .7,
+            x: .16,
+            y: .248,
             type: fieldTypes.GA_FIELD,
             ga_property: 'be.vvksm.groepsadmin.model.column.GsmColumn',
           },
           {
-            x: .7,
-            y: .8,
-            type: fieldTypes.GA_FIELD,
-            ga_property: 'be.vvksm.groepsadmin.model.column.GeboorteDatumColumn',
-          },
-          {
-            x: .8,
-            y: .9,
+            x: .18,
+            y: .205,
             type: fieldTypes.GA_FIELD,
             ga_property: 'be.vvksm.groepsadmin.model.column.StraatnaamColumn',
           },
           {
-            x: .1,
-            y: .5,
+            y: .185,
+            x: .61,
             type: fieldTypes.GA_FIELD,
             ga_property: 'be.vvksm.groepsadmin.model.column.AchternaamColumn',
           },
           {
-            x: .2,
-            y: .6,
+            y: .225,
+            x: .19,
             type: fieldTypes.GA_FIELD,
             ga_property: 'be.vvksm.groepsadmin.model.column.PostcodeColumn',
           },
@@ -285,6 +267,18 @@
             y: .8,
             type: fieldTypes.GA_FIELD,
             ga_property: 'be.vvksm.groepsadmin.model.column.StraatnummerColumn',
+          },
+          {
+            y: .325,
+            x: .35,
+            type: fieldTypes.FREE_TEXT,
+            value: 'Scouts en Gidsen Ashkan',
+          },
+          {
+            y: .347,
+            x: .33,
+            type: fieldTypes.FREE_TEXT,
+            value: '+32473725140',
           },
         ],
       };
@@ -387,9 +381,11 @@
       };
 
       $(document).ready(function(){
-        $('#voorbeeld').modal({
+        const modal = $('#voorbeeld');
+        modal.modal({
           onOpenEnd: onOpenModal
         });
+        modal.modal('open');
       });
 
 
